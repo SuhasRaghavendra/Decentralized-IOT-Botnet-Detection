@@ -1,0 +1,24 @@
+{
+  "selected_features": [
+    "Header_Length",
+    "Duration",
+    "syn_flag_number",
+    "ack_flag_number",
+    "syn_count",
+    "urg_count",
+    "rst_count",
+    "HTTPS",
+    "UDP",
+    "ICMP",
+    "Tot sum",
+    "Min",
+    "Max",
+    "AVG",
+    "Tot size",
+    "Covariance",
+    "Variance"
+  ],
+  "count": 17,
+  "selection_method": "binary_pearson_top20_intersect_binary_mi_top20",
+  "note": "Load this file in all downstream scripts to guarantee consistent feature ordering."
+}

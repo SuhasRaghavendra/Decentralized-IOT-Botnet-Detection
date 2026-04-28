@@ -1,0 +1,17 @@
+{
+  "0": "Backdoor",
+  "1": "Benign",
+  "2": "BrowserHijacking",
+  "3": "CommandInjection",
+  "4": "DDoS",
+  "5": "DNS",
+  "6": "DictionaryBruteForce",
+  "7": "DoS",
+  "8": "MITM",
+  "9": "Mirai",
+  "10": "Recon",
+  "11": "SqlInjection",
+  "12": "Uploading",
+  "13": "VulnerabilityScan",
+  "14": "XSS"
+}

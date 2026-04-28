@@ -1,0 +1,17 @@
+# Data splits (raw and processed)
+CICIOT23/
+*_clean.csv
+train_binary_smote.csv
+
+# Binary model artifacts
+*.pkl
+*.joblib
+
+# Generated reports
+*.html
+
+# Environment
+.conda/
+__pycache__/
+*.pyc
+.env
