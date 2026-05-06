@@ -1,0 +1,63 @@
+{
+  "split": "validation",
+  "top_k": 8,
+  "laplacian_type": "normalized",
+  "new_columns": [
+    "spectral_eigen_0",
+    "spectral_eigen_1",
+    "spectral_eigen_2",
+    "spectral_eigen_3",
+    "spectral_eigen_4",
+    "spectral_eigen_5",
+    "spectral_eigen_6",
+    "spectral_eigen_7",
+    "spectral_proj_0",
+    "spectral_proj_1",
+    "spectral_proj_2",
+    "spectral_proj_3",
+    "spectral_proj_4",
+    "spectral_proj_5",
+    "spectral_proj_6",
+    "spectral_proj_7",
+    "fiedler_value",
+    "partition_id"
+  ],
+  "partitions_processed": 4,
+  "per_partition_summary": {
+    "0": {
+      "node_count": 1,
+      "eigenvalues": [
+        1.0
+      ],
+      "fiedler_value": 0.0
+    },
+    "1": {
+      "node_count": 17,
+      "eigenvalues": [
+        4.501383225390492e-16,
+        1.0595664328963974,
+        1.0625520524508612,
+        1.0626052475129566,
+        1.062627495345095,
+        1.06262847379802,
+        1.0626539719435022,
+        1.0626924274951035
+      ],
+      "fiedler_value": 1.0595664328963974
+    },
+    "2": {
+      "node_count": 1,
+      "eigenvalues": [
+        1.0
+      ],
+      "fiedler_value": 0.0
+    },
+    "3": {
+      "node_count": 1,
+      "eigenvalues": [
+        1.0
+      ],
+      "fiedler_value": 0.0
+    }
+  }
+}

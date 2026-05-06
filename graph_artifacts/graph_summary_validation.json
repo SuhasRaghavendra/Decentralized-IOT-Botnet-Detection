@@ -1,0 +1,9 @@
+{
+  "nodes": 20,
+  "edges": 190,
+  "density": 1.0,
+  "avg_degree": 19.0,
+  "max_degree": 19,
+  "is_connected": true,
+  "num_connected_components": 1
+}

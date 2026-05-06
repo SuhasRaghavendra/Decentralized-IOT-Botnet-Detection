@@ -1,0 +1,62 @@
+{
+  "n_partitions": 4,
+  "cross_partition_edges": 54,
+  "per_partition": {
+    "0": {
+      "node_count": 1,
+      "nodes": [
+        12
+      ],
+      "internal_edges": 0,
+      "total_flows": 6801,
+      "attack_flows": 2325,
+      "attack_ratio": 0.3418614909572122
+    },
+    "1": {
+      "node_count": 17,
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "internal_edges": 136,
+      "total_flows": 1162999,
+      "attack_flows": 1142404,
+      "attack_ratio": 0.9822914723056512
+    },
+    "2": {
+      "node_count": 1,
+      "nodes": [
+        13
+      ],
+      "internal_edges": 0,
+      "total_flows": 2507,
+      "attack_flows": 2505,
+      "attack_ratio": 0.9992022337455125
+    },
+    "3": {
+      "node_count": 1,
+      "nodes": [
+        5
+      ],
+      "internal_edges": 0,
+      "total_flows": 4544,
+      "attack_flows": 2098,
+      "attack_ratio": 0.46170774647887325
+    }
+  }
+}
