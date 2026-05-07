@@ -223,132 +223,131 @@ def generate_report(
             )
         return str(cm)
 
-    report = textwrap.dedent(f"""\
-    # Spectral Feature Experiment Report
+    report = f"""# Spectral Feature Experiment Report
 
-    > **Task D3 — Team Member 2**
-    > Evaluating the impact of Graph Laplacian spectral features on Random Forest
-    > botnet detection performance using the CICIoT2023 dataset.
+> **Task D3 — Team Member 2**
+> Evaluating the impact of Graph Laplacian spectral features on Random Forest
+> botnet detection performance using the CICIoT2023 dataset.
 
-    ---
+---
 
-    ## Experiment Configuration
+## Experiment Configuration
 
-    | Parameter | Value |
-    |-----------|-------|
-    | Dataset split | `{config['split']}` |
-    | Virtual device nodes (K) | {config['k']} |
-    | Temporal window size | {config['window_size']} rows |
-    | Graph partitions | {config['n_partitions']} |
-    | Spectral features (top-k) | {config['top_k']} |
-    | RF n_estimators | {config['n_estimators']} |
-    | Laplacian type | Normalized (Lₙ = I − D⁻¹ᐟ² A D⁻¹ᐟ²) |
-    | Random seed | 42 |
+| Parameter | Value |
+|-----------|-------|
+| Dataset split | `{config['split']}` |
+| Virtual device nodes (K) | {config['k']} |
+| Temporal window size | {config['window_size']} rows |
+| Graph partitions | {config['n_partitions']} |
+| Spectral features (top-k) | {config['top_k']} |
+| RF n_estimators | {config['n_estimators']} |
+| Laplacian type | Normalized (Lₙ = I − D⁻¹ᐟ² A D⁻¹ᐟ²) |
+| Random seed | 42 |
 
-    ---
+---
 
-    ## Results Summary
+## Results Summary
 
-    | Metric | Baseline RF ({baseline_metrics['n_features']} features) | Spectral RF ({spectral_metrics['n_features']} features) | Δ (Spectral − Baseline) |
-    |--------|---------|---------|------|
-    | **Accuracy** | {baseline_metrics['accuracy']:.4f} | {spectral_metrics['accuracy']:.4f} | {delta('accuracy')} |
-    | **Macro F1** | {baseline_metrics['macro_f1']:.4f} | {spectral_metrics['macro_f1']:.4f} | {delta('macro_f1')} |
-    | **Binary F1** | {baseline_metrics['binary_f1']:.4f} | {spectral_metrics['binary_f1']:.4f} | {delta('binary_f1')} |
-    | **ROC-AUC** | {baseline_metrics['roc_auc']:.4f} | {spectral_metrics['roc_auc']:.4f} | {delta('roc_auc')} |
-    | **PR-AUC** | {baseline_metrics['pr_auc']:.4f} | {spectral_metrics['pr_auc']:.4f} | {delta('pr_auc')} |
-    | Training time (s) | {baseline_metrics['training_time_s']:.1f} | {spectral_metrics['training_time_s']:.1f} | — |
+| Metric | Baseline RF ({baseline_metrics['n_features']} features) | Spectral RF ({spectral_metrics['n_features']} features) | Δ (Spectral − Baseline) |
+|--------|---------|---------|------|
+| **Accuracy** | {baseline_metrics['accuracy']:.4f} | {spectral_metrics['accuracy']:.4f} | {delta('accuracy')} |
+| **Macro F1** | {baseline_metrics['macro_f1']:.4f} | {spectral_metrics['macro_f1']:.4f} | {delta('macro_f1')} |
+| **Binary F1** | {baseline_metrics['binary_f1']:.4f} | {spectral_metrics['binary_f1']:.4f} | {delta('binary_f1')} |
+| **ROC-AUC** | {baseline_metrics['roc_auc']:.4f} | {spectral_metrics['roc_auc']:.4f} | {delta('roc_auc')} |
+| **PR-AUC** | {baseline_metrics['pr_auc']:.4f} | {spectral_metrics['pr_auc']:.4f} | {delta('pr_auc')} |
+| Training time (s) | {baseline_metrics['training_time_s']:.1f} | {spectral_metrics['training_time_s']:.1f} | — |
 
-    ---
+---
 
-    ## Baseline RF — Detailed Results
+## Baseline RF — Detailed Results
 
-    ### Confusion Matrix
+### Confusion Matrix
 
-    {fmt_cm(baseline_metrics['confusion_matrix'])}
+{fmt_cm(baseline_metrics['confusion_matrix'])}
 
-    ### Classification Report
+### Classification Report
 
-    ```
-    {baseline_metrics['classification_report']}
-    ```
+```
+{baseline_metrics['classification_report']}
+```
 
-    ### Top-10 Feature Importances
+### Top-10 Feature Importances
 
-    | Rank | Feature | Importance |
-    |------|---------|-----------|
-    {fmt_top_features(baseline_metrics['top_features'])}
+| Rank | Feature | Importance |
+|------|---------|-----------|
+{fmt_top_features(baseline_metrics['top_features'])}
 
-    ---
+---
 
-    ## Spectral RF — Detailed Results
+## Spectral RF — Detailed Results
 
-    ### Confusion Matrix
+### Confusion Matrix
 
-    {fmt_cm(spectral_metrics['confusion_matrix'])}
+{fmt_cm(spectral_metrics['confusion_matrix'])}
 
-    ### Classification Report
+### Classification Report
 
-    ```
-    {spectral_metrics['classification_report']}
-    ```
+```
+{spectral_metrics['classification_report']}
+```
 
-    ### Top-10 Feature Importances
+### Top-10 Feature Importances
 
-    | Rank | Feature | Importance |
-    |------|---------|-----------|
-    {fmt_top_features(spectral_metrics['top_features'])}
+| Rank | Feature | Importance |
+|------|---------|-----------|
+{fmt_top_features(spectral_metrics['top_features'])}
 
-    ---
+---
 
-    ## Analysis
+## Analysis
 
-    ### Spectral Feature Contribution
-    The spectral augmentation adds **{spectral_metrics['n_features'] - baseline_metrics['n_features']}
-    new features** derived from the Graph Laplacian eigen-decomposition:
-    - `spectral_eigen_i`: Eigenvalues of the partition's normalized Laplacian.
-    - `spectral_proj_i`: Projection of each node onto the i-th eigenvector.
-    - `fiedler_value`: Algebraic connectivity (λ₁) of the partition.
-    - `partition_id`: Edge cluster assignment.
+### Spectral Feature Contribution
+The spectral augmentation adds **{spectral_metrics['n_features'] - baseline_metrics['n_features']}
+new features** derived from the Graph Laplacian eigen-decomposition:
+- `spectral_eigen_i`: Eigenvalues of the partition's normalized Laplacian.
+- `spectral_proj_i`: Projection of each node onto the i-th eigenvector.
+- `fiedler_value`: Algebraic connectivity (λ₁) of the partition.
+- `partition_id`: Edge cluster assignment.
 
-    ### Why Spectral Features Help (or Don't)
-    - **Coordinated botnets** generate correlated traffic patterns that manifest
-      as anomalous eigenvalue distributions — unusually small Fiedler values
-      indicate isolated, weakly-connected attack clusters.
-    - **Distributed DDoS** appears as dense subgraphs within a partition,
-      reflected in larger spectral gaps.
-    - If the Δ metrics are marginal, it may indicate that the flow-level
-      tabular features already capture most discriminative signal, and that
-      graph structure adds redundant information.
+### Why Spectral Features Help (or Don't)
+- **Coordinated botnets** generate correlated traffic patterns that manifest
+  as anomalous eigenvalue distributions — unusually small Fiedler values
+  indicate isolated, weakly-connected attack clusters.
+- **Distributed DDoS** appears as dense subgraphs within a partition,
+  reflected in larger spectral gaps.
+- If the Δ metrics are marginal, it may indicate that the flow-level
+  tabular features already capture most discriminative signal, and that
+  graph structure adds redundant information.
 
-    ### Limitations
-    - Virtual device nodes (K-Means clusters) are a proxy for real device
-      identities. With raw IP addresses, graph quality would improve.
-    - The evaluation uses the **validation split only** (test is frozen).
-      Final numbers will differ slightly after full test evaluation.
-    - The validation split was internally split 80/20 into train/test sets to
-      evaluate out-of-sample performance without touching the frozen test set.
+### Limitations
+- Virtual device nodes (K-Means clusters) are a proxy for real device
+  identities. With raw IP addresses, graph quality would improve.
+- The evaluation uses the **validation split only** (test is frozen).
+  Final numbers will differ slightly after full test evaluation.
+- The validation split was internally split 80/20 into train/test sets to
+  evaluate out-of-sample performance without touching the frozen test set.
 
-    ---
+---
 
-    ## Integration Note
+## Integration Note
 
-    These spectral features are ready to be merged with Team Member 1's
-    `baseline_evaluation.ipynb`.  Add a new cell that:
-    1. Loads `graph_artifacts/spectral_augmented_validation.csv`.
-    2. Extracts the spectral columns and the original 17 features.
-    3. Re-trains Member 1's best RF configuration on the augmented set.
-    4. Appends the results table to the centralized metrics notebook.
+These spectral features are ready to be merged with Team Member 1's
+`baseline_evaluation.ipynb`.  Add a new cell that:
+1. Loads `graph_artifacts/spectral_augmented_validation.csv`.
+2. Extracts the spectral columns and the original 17 features.
+3. Re-trains Member 1's best RF configuration on the augmented set.
+4. Appends the results table to the centralized metrics notebook.
 
-    See `team_division_and_integration.md` § Integration Checkpoint.
+See `team_division_and_integration.md` § Integration Checkpoint.
 
-    ---
+---
 
-    *Generated automatically by `train_spectral_rf.py` — Team Member 2.*
-    """)
+*Generated automatically by `train_spectral_rf.py` — Team Member 2.*
+"""
 
     with output_path.open("w", encoding="utf-8") as fh:
         fh.write(report)
-    print(f"\n  Report saved → {output_path}")
+    print(f"\n  Report saved -> {output_path}")
 
 
 # -- Main pipeline -------------------------------------------------------------
