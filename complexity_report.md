@@ -15,10 +15,10 @@ Raw CSV flows
 [Phase A] Preprocessing & Baseline Modeling 
      │
      ▼
-[Phase C] Graph Construction & Partitioning 
+[Phase B] Graph Construction & Partitioning 
      │
      ▼
-[Phase D] Spectral Laplacian Feature Extraction 
+[Phase C] Spectral Laplacian Feature Extraction 
      │
      ▼
 Augmented Features & Final Classification
@@ -175,26 +175,4 @@ S = O(N · k_spectral)   — k_spectral = 2·top_k + 2 new columns
 
 ---
 
-## 6. Algorithmic Optimisations Implemented (C4)
 
-The following optimisations are applied to ensure Sections A, C, and D are highly scalable:
-
-### 6.1 Vectorised Correlation (preprocess_ciciot23.py)
-**Speedup:** ~20–100× for feature selection.
-Replaced naive O(N·F²) double loops with `pandas.DataFrame.corr().abs()` which uses `numpy.corrcoef` internally (a single optimized BLAS call).
-
-### 6.2 Pre-computed Mutual Information (preprocess_ciciot23.py)
-**Speedup:** ~N/log(N) vs naive histogram MI.
-Uses `sklearn.feature_selection.mutual_info_classif`, which relies on a vectorised k-nearest-neighbour estimator (Kraskov estimator) operating in O(N log N) time.
-
-### 6.3 MiniBatchKMeans vs KMeans (graph_builder.py)
-**Memory reduction:** From O(N·F) active working set to O(batch_size·F).
-Batched gradient descent allows the entire dataset to remain out of core or fit comfortably in L3 cache without holding all N points in memory.
-
-### 6.4 numpy.linalg.eigh vs eig (spectral_features.py)
-**Speedup & Stability:** 3× faster.
-Since Laplacian matrices are real symmetric, `numpy.linalg.eigh` is used. It runs in O(V_p³ / 3) and guarantees mathematically sound real eigenvalues, unlike the general `eig` solver which runs in O(V_p³) and may return complex numbers.
-
-### 6.5 Vectorised Window Assignment (graph_builder.py)
-**Speedup:** ~50–100× for large DataFrames.
-Replaced `df.iterrows()` with `np.arange(len(result)) // window_size` executing entirely at C-speed.
