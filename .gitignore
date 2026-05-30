@@ -15,3 +15,17 @@ train_binary_smote.csv
 __pycache__/
 *.pyc
 .env
+
+# Jupyter and Testing
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Project Generated Artifacts and Models
+models/
+graph_artifacts/
+processed_ciciot23/*.csv
+
+# Temporary Utility Scripts
+fix_notebook.py
+patch_notebook.py
+
