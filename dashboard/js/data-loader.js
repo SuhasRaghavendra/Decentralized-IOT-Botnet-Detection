@@ -8,6 +8,10 @@ const DataLoader = {
   
   async load() {
     try {
+      if (typeof window.DASHBOARD_DATA !== 'undefined') {
+        this.data = window.DASHBOARD_DATA;
+        return this.data;
+      }
       const response = await fetch('./data/dashboard_data.json');
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       this.data = await response.json();

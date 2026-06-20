@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Decentralized IoT Botnet Detection Dashboard — CICIoT2023 dataset analysis, federated learning, and attack-specific ML models.">
   <title>IoT Botnet Detection Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,25 +23,31 @@
     </div>
     
     <div class="nav-section-label">Main</div>
-    <a href="#section-overview" class="nav-item active" data-target="overview">
+    <a href="#section-overview" class="nav-item active" data-target="overview" id="nav-overview">
       <span class="nav-icon">📊</span> Overview
     </a>
-    <a href="#section-graph" class="nav-item" data-target="graph">
+    <a href="#section-graph" class="nav-item" data-target="graph" id="nav-graph">
       <span class="nav-icon">🌐</span> Network Graph
     </a>
-    <a href="#section-attacks" class="nav-item" data-target="attacks">
+    <a href="#section-attacks" class="nav-item" data-target="attacks" id="nav-attacks">
       <span class="nav-icon">⚔️</span> Attack Models
     </a>
     
     <div class="nav-section-label">Pipeline</div>
-    <a href="#section-preprocessing" class="nav-item" data-target="preprocessing">
+    <a href="#section-preprocessing" class="nav-item" data-target="preprocessing" id="nav-preprocessing">
       <span class="nav-icon">⚙️</span> Preprocessing
     </a>
-    <a href="#section-spectral" class="nav-item" data-target="spectral">
+    <a href="#section-baseline" class="nav-item" data-target="baseline" id="nav-baseline">
+      <span class="nav-icon">📈</span> Baseline Models
+    </a>
+    <a href="#section-spectral" class="nav-item" data-target="spectral" id="nav-spectral">
       <span class="nav-icon">📉</span> Spectral Analysis
     </a>
-    <a href="#section-federated" class="nav-item" data-target="federated">
-      <span class="nav-icon">🔗</span> Federated Learning
+    <a href="#section-pipeline" class="nav-item" data-target="pipeline" id="nav-pipeline">
+      <span class="nav-icon">🔗</span> Full Pipeline
+    </a>
+    <a href="#section-reports" class="nav-item" data-target="reports" id="nav-reports">
+      <span class="nav-icon">📋</span> Reports & Export
     </a>
     
     <div class="sidebar-footer">
@@ -49,7 +59,7 @@
   <!-- MAIN CONTENT -->
   <main class="main">
 
-    <!-- 1. OVERVIEW -->
+    <!-- SECTION 1: OVERVIEW -->
     <section id="section-overview" class="section visible">
       <div class="eyebrow">Project Overview</div>
       <h1 class="section-title" id="overview-title">Decentralized IoT Botnet Detection</h1>
@@ -99,7 +109,7 @@
       </div>
     </section>
 
-    <!-- 2. NETWORK GRAPH -->
+    <!-- SECTION 2: NETWORK GRAPH -->
     <section id="section-graph" class="section">
       <div class="eyebrow">Topology</div>
       <h1 class="section-title">Live Network Graph</h1>
@@ -131,7 +141,8 @@
           <div class="card glow-red">
             <div class="card-title">Node Control</div>
             <div class="metric-row" style="margin-bottom:12px;">
-              <div class="metric-pill">Total Nodes: <strong id="gc-total">50</strong></div>
+              <div class="metric-pill">Total: <strong id="gc-total">50</strong></div>
+              <div class="metric-pill">Malicious: <strong id="gc-malicious" style="color:var(--orange)">0%</strong></div>
               <div class="metric-pill">Blocked: <strong id="gc-blocked" style="color:var(--red)">0</strong></div>
             </div>
             <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Select a node in the graph to view its details and block its traffic.</p>
@@ -155,16 +166,17 @@
             <div class="blocked-log" id="blocked-log">
               <div style="font-size:11px; color:var(--text-muted); text-align:center; padding:20px 0;">No nodes blocked yet.</div>
             </div>
+            <button class="btn btn-ghost btn-sm" id="btn-export-blocked" style="margin-top:12px; width:100%;">📥 Export Blocked List</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3. ATTACK MODELS -->
+    <!-- SECTION 3: ATTACK MODELS -->
     <section id="section-attacks" class="section">
       <div class="eyebrow">Threat Analysis</div>
       <h1 class="section-title">Attack-Specific Models</h1>
-      <p class="section-subtitle">Dedicated binary classifiers trained on attack-specific feature signatures.</p>
+      <p class="section-subtitle">Dedicated binary classifiers trained on attack-specific feature signatures using One-vs-Rest framing.</p>
       
       <div class="tabs" id="attack-tabs">
         <button class="tab-btn active-ddos" data-attack="ddos_icmp">DDoS-ICMP</button>
@@ -172,7 +184,6 @@
         <button class="tab-btn" data-attack="mirai_greeth">Mirai-GRE</button>
       </div>
       
-      <!-- Attack Content -->
       <div class="card" id="attack-content-panel">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px;">
           <div>
@@ -188,18 +199,14 @@
         <div class="grid-2">
           <div>
             <div class="card-title">Key Signatures</div>
-            <div class="feat-grid" id="ac-signatures">
-              <!-- Populated by JS -->
-            </div>
+            <div class="feat-grid" id="ac-signatures"></div>
             
             <div class="divider"></div>
             
             <div class="card-title">Model Performance</div>
             <table class="data-table">
-              <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1 Score</th></tr></thead>
-              <tbody id="ac-metrics-table">
-                <!-- Populated by JS -->
-              </tbody>
+              <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1 Score</th><th>ROC-AUC</th></tr></thead>
+              <tbody id="ac-metrics-table"></tbody>
             </table>
           </div>
           
@@ -208,15 +215,13 @@
               <div class="card-title">Confusion Matrix</div>
               <canvas id="chart-confusion"></canvas>
             </div>
-            <div class="metric-row" style="margin-top:12px;" id="ac-extra-features">
-              <!-- Extra features listed here -->
-            </div>
+            <div class="metric-row" style="margin-top:12px;" id="ac-extra-features"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. PREPROCESSING -->
+    <!-- SECTION 4: PREPROCESSING -->
     <section id="section-preprocessing" class="section">
       <div class="eyebrow">Data Pipeline</div>
       <h1 class="section-title">Preprocessing & Selection</h1>
@@ -243,27 +248,71 @@
       <div class="grid-2">
         <div class="card">
           <div class="card-title">Cleaning Pipeline</div>
-          <div class="step-list" id="prep-pipeline-list">
-            <!-- Populated by JS -->
-          </div>
+          <div class="step-list" id="prep-pipeline-list"></div>
         </div>
         
         <div class="card">
-          <div class="card-title">Global Binary Baseline Results</div>
-          <table class="data-table" style="margin-bottom:20px;">
-            <thead><tr><th>Model</th><th>Acc</th><th>Prec</th><th>Recall</th><th>F1</th></tr></thead>
-            <tbody id="baseline-table">
-              <!-- Populated by JS -->
-            </tbody>
-          </table>
-          <p style="font-size:11px; color:var(--text-sub); line-height:1.5;">
-            These baseline models were trained on the 17 globally selected features for all 34 attack classes grouped into a single binary "Attack" label.
-          </p>
+          <div class="card-title">Selected Features (17)</div>
+          <div id="selected-features-grid" class="feat-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px,1fr));"></div>
         </div>
       </div>
     </section>
 
-    <!-- 5. SPECTRAL -->
+    <!-- SECTION 5: BASELINE MODELS (NEW) -->
+    <section id="section-baseline" class="section">
+      <div class="eyebrow">Section 5 — Original 17 Features</div>
+      <h1 class="section-title">Baseline Models</h1>
+      <p class="section-subtitle">Performance of LR, RF, XGB, and LGBM trained on the 17 globally-selected features for both binary and family-level classification.</p>
+
+      <div class="grid-4" id="baseline-stat-cards">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Binary Classification -->
+      <div class="eyebrow" style="margin-bottom:8px;">Binary Classification — Attack vs Benign</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Model Comparison</div>
+          <table class="data-table">
+            <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <tbody id="baseline-table"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Binary F1 Comparison</div>
+          <div class="chart-wrap">
+            <canvas id="chart-binary-bar"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Family Classification -->
+      <div class="eyebrow" style="margin-bottom:8px;">Family Classification — 15 Classes</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Multi-Class Results</div>
+          <table class="data-table">
+            <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <tbody id="family-table"></tbody>
+          </table>
+          <p style="font-size:11px; color:var(--text-sub); margin-top:12px; line-height:1.6;">
+            Family-level classification across 15 attack families. Class imbalance (DDoS dominates at 72.8%) makes this significantly harder than binary detection.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">Family Accuracy Comparison</div>
+          <div class="chart-wrap">
+            <canvas id="chart-family-bar"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SPECTRAL ANALYSIS -->
     <section id="section-spectral" class="section">
       <div class="eyebrow">Graph Algorithms</div>
       <h1 class="section-title">Spectral Analysis</h1>
@@ -320,23 +369,76 @@
               <div class="step-num">3</div>
               <div class="step-content">
                 <div class="step-title">Normalized Laplacian</div>
-                <div class="step-detail">L = I - D^(-1/2) A D^(-1/2). Top eigenvalues capture the structure of the traffic.</div>
+                <div class="step-detail">L = I - D<sup>(-1/2)</sup> A D<sup>(-1/2)</sup>. Top eigenvalues capture traffic structure.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <div class="step-title">Spectral RF</div>
+                <div class="step-detail">17 original features + 18 spectral columns (8 eigenvalues + 8 projections + Fiedler + partition_id) fed to RF.</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- 6. FEDERATED -->
-    <section id="section-federated" class="section">
-      <div class="eyebrow">Distributed ML</div>
-      <h1 class="section-title">Federated Learning</h1>
-      <p class="section-subtitle">Privacy-preserving model aggregation across distributed edge nodes using Flower (flwr).</p>
-      
+      <div class="divider"></div>
+
+      <!-- Spectral vs Baseline Comparison (NEW — Section 6 from plan) -->
+      <div class="eyebrow" style="margin-bottom:8px;">Spectral Augmented vs Baseline RF</div>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">Federated Rounds</div>
+          <div class="card-title">Performance Overlay (17 + Spectral Features)</div>
+          <table class="data-table">
+            <thead><tr><th>Model</th><th>Features</th><th>Accuracy</th><th>F1</th><th>Δ F1</th></tr></thead>
+            <tbody id="spectral-compare-table"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Metric Delta Chart</div>
+          <div class="chart-wrap">
+            <canvas id="chart-spectral-compare"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: FULLY INTEGRATED PIPELINE (NEW) -->
+    <section id="section-pipeline" class="section">
+      <div class="eyebrow">Section 7 — End-to-End</div>
+      <h1 class="section-title">Fully Integrated Pipeline</h1>
+      <p class="section-subtitle">Performance of models utilizing Original 17 Features + Graph/Spectral + Matrix Projection features, plus Federated Learning results across rounds.</p>
+
+      <!-- Matrix Integration -->
+      <div class="eyebrow" style="margin-bottom:8px;">Matrix Integration — Feature Engineering</div>
+      <div class="grid-4" id="matrix-stat-cards">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="grid-2" style="margin-top:20px;">
+        <div class="card">
+          <div class="card-title">Model Performance — All Feature Sets</div>
+          <table class="data-table">
+            <thead><tr><th>Model Variant</th><th>Features</th><th>Accuracy</th><th>F1</th></tr></thead>
+            <tbody id="matrix-compare-table"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Feature Importance — Matrix vs Base</div>
+          <div class="chart-wrap">
+            <canvas id="chart-matrix-importance"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Federated Learning -->
+      <div class="eyebrow" style="margin-bottom:8px;">Federated Learning — Privacy-Preserving Training</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Global Model Accuracy Over FL Rounds</div>
           <div class="chart-wrap">
             <canvas id="chart-fl"></canvas>
           </div>
@@ -379,11 +481,75 @@
           </div>
         </div>
       </div>
+
+      <!-- FL Final Eval -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Final Global Model Evaluation</div>
+        <div class="grid-4" id="fl-final-stats">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: REPORTS & EXPORT (NEW) -->
+    <section id="section-reports" class="section">
+      <div class="eyebrow">Section 8 — Outputs</div>
+      <h1 class="section-title">Reports & Export</h1>
+      <p class="section-subtitle">Download metrics, confusion matrices, and model checkpoint information. View the preprocessing run log.</p>
+
+      <!-- Download buttons -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">Export Metrics</div>
+        <div class="metric-row" style="flex-wrap:wrap; gap:10px; margin-top:0;">
+          <button class="btn btn-success btn-sm" id="btn-export-dashboard-json">📥 Dashboard Data JSON</button>
+          <button class="btn btn-success btn-sm" id="btn-export-attack-metrics">📥 Attack Metrics JSON</button>
+          <button class="btn btn-success btn-sm" id="btn-export-binary-csv">📥 Binary Results CSV</button>
+          <button class="btn btn-success btn-sm" id="btn-export-family-csv">📥 Family Results CSV</button>
+          <button class="btn btn-success btn-sm" id="btn-export-comparison-md">📥 Comparison Report MD</button>
+        </div>
+      </div>
+
+      <!-- Model Checkpoints -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Model Checkpoint Info</div>
+          <div id="checkpoint-list" class="step-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cross-Attack False Alarm Matrix</div>
+          <p style="font-size:12px; color:var(--text-sub); margin-bottom:14px;">Each attack-specific model tested against all three attack subsets. Values show recall on that attack's validation rows.</p>
+          <table class="data-table" id="cross-attack-table">
+            <thead>
+              <tr>
+                <th>Detector \ Traffic</th>
+                <th style="color:var(--red)">DDoS-ICMP</th>
+                <th style="color:var(--accent)">DDoS-SYN</th>
+                <th style="color:var(--cyan)">Mirai-GRE</th>
+              </tr>
+            </thead>
+            <tbody id="cross-attack-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pipeline Run Log -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Preprocessing Run Log</div>
+        <div id="run-log-timeline" class="step-list"></div>
+      </div>
+
+      <!-- Verification Checklist -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Verification Checklist</div>
+        <div id="verification-list" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;"></div>
+      </div>
     </section>
 
   </main>
 
   <!-- SCRIPTS -->
+  <script src="data/dashboard_data.js"></script>
   <script src="js/data-loader.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/network-graph.js"></script>

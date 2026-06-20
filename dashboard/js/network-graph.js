@@ -159,7 +159,7 @@ const NetworkGraph = {
       })
       .call(this.drag(this.simulation))
       .on('click', (e, d) => {
-        if (window.NodeControl) window.NodeControl.selectNode(d);
+        if (typeof NodeControl !== 'undefined') NodeControl.selectNode(d);
         // Highlight logic
         this.node.attr('stroke', '#0a0c12').attr('stroke-width', 1.5);
         d3.select(e.currentTarget).attr('stroke', '#fff').attr('stroke-width', 3);
@@ -178,6 +178,16 @@ const NetworkGraph = {
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
     });
+    
+    this.updateStats();
+  },
+  
+  updateStats() {
+    const maliciousCount = this.nodesData.filter(n => n.type !== 'benign').length;
+    const total = this.nodesData.length;
+    const pct = Math.round((maliciousCount / total) * 100);
+    const el = document.getElementById('gc-malicious');
+    if (el) el.textContent = pct + '%';
   },
   
   drag(simulation) {
@@ -237,10 +247,11 @@ const NetworkGraph = {
           .attr('r', n.val)
           .style('animation', 'malicious-pulse 2s infinite');
           
+        this.updateStats();
         // Re-simulate briefly to adjust for size
         this.simulation.alpha(0.3).restart();
       }
-    }, 2000);
+    }, 333);
   },
   
   stopSimulation() {

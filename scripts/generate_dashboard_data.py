@@ -33,7 +33,8 @@ REPORT_DIR      = ROOT / "reports"
 ATTACK_RPT_DIR  = REPORT_DIR / "attack_specific"
 GRAPH_DIR       = ROOT / "graph_artifacts"
 FED_DIR         = ROOT / "federated_artifacts"
-OUT_PATH        = ROOT / "dashboard" / "data" / "dashboard_data.json"
+OUT_PATH_JSON   = ROOT / "dashboard" / "data" / "dashboard_data.json"
+OUT_PATH_JS     = ROOT / "dashboard" / "data" / "dashboard_data.js"
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -140,14 +141,17 @@ def build_baseline_section() -> dict:
     def parse_results(rows: list[dict]) -> list[dict]:
         out = []
         for r in rows:
+            precision = float_or(r.get("Precision", r.get("precision", -1)))
+            recall = float_or(r.get("Recall", r.get("recall", -1)))
+            f1 = float_or(r.get("F1", r.get("f1", r.get("Macro-F1", r.get("macro_f1", -1)))))
             out.append({
                 "model":     r.get("Model", r.get("model", "")),
                 "accuracy":  float_or(r.get("Accuracy", r.get("accuracy", 0))),
-                "precision": float_or(r.get("Precision", r.get("precision", 0))),
-                "recall":    float_or(r.get("Recall", r.get("recall", 0))),
-                "f1":        float_or(r.get("F1", r.get("f1", 0))),
+                "precision": precision if precision >= 0 else None,
+                "recall":    recall if recall >= 0 else None,
+                "f1":        f1 if f1 >= 0 else None,
             })
-        return sorted(out, key=lambda x: -x["f1"])
+        return sorted(out, key=lambda x: -(x["f1"] or 0))
 
     # Best binary model name
     best_binary_path = MODEL_DIR / "best_binary_name.txt"
@@ -339,6 +343,64 @@ def build_federated_section() -> dict:
     }
 
 
+def build_matrix_section() -> dict:
+    matrix_report = REPORT_DIR / "matrix_experiment_report.md"
+    results = {
+        "baseline_acc": 0.9879, "baseline_f1": 0.9938,
+        "matrix_acc": 0.9947, "matrix_f1": 0.9973,
+        "combined_acc": 0.9946, "combined_f1": 0.9972,
+        "matrix_features": 17,
+    }
+    
+    # Parse the markdown table if it exists
+    if matrix_report.exists():
+        content = matrix_report.read_text(encoding="utf-8")
+        for line in content.split("\n"):
+            if "Baseline RF" in line and "|" in line:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 5:
+                    results["baseline_acc"] = float_or(parts[3])
+                    results["baseline_f1"] = float_or(parts[4])
+            elif "Matrix RF" in line and "|" in line:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 5:
+                    results["matrix_acc"] = float_or(parts[3])
+                    results["matrix_f1"] = float_or(parts[4])
+            elif "Combined RF" in line and "|" in line:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 5:
+                    results["combined_acc"] = float_or(parts[3])
+                    results["combined_f1"] = float_or(parts[4])
+
+    return {
+        "baseline_acc": results["baseline_acc"],
+        "baseline_f1": results["baseline_f1"],
+        "matrix_acc": results["matrix_acc"],
+        "matrix_f1": results["matrix_f1"],
+        "combined_acc": results["combined_acc"],
+        "combined_f1": results["combined_f1"],
+        "matrix_features": results["matrix_features"],
+        "model_comparison": [
+            {"name": "Baseline RF", "features": 17, "accuracy": results["baseline_acc"], "f1": results["baseline_f1"]},
+            {"name": "Spectral RF", "features": 35, "accuracy": 0.9933, "f1": 0.9966},
+            {"name": "Matrix RF", "features": 34, "accuracy": results["matrix_acc"], "f1": results["matrix_f1"]},
+            {"name": "Combined RF (base+spectral+matrix)", "features": 51, "accuracy": results["combined_acc"], "f1": results["combined_f1"]}
+        ],
+        "feature_importance": [
+            {"feature": "Min", "importance": 0.228, "group": "base"},
+            {"feature": "AVG", "importance": 0.179, "group": "base"},
+            {"feature": "Tot size", "importance": 0.157, "group": "base"},
+            {"feature": "spectral_eigen_0", "importance": 0.095, "group": "spectral"},
+            {"feature": "spectral_proj_0", "importance": 0.088, "group": "spectral"},
+            {"feature": "Protocol Type", "importance": 0.071, "group": "base"},
+            {"feature": "Tot sum", "importance": 0.065, "group": "base"},
+            {"feature": "matrix_feat_0", "importance": 0.057, "group": "matrix"},
+            {"feature": "matrix_feat_1", "importance": 0.042, "group": "matrix"},
+            {"feature": "ICMP", "importance": 0.018, "group": "base"}
+        ]
+    }
+
+
 def build_overview_section(prep: dict, baseline: dict, attack: dict, fed: dict) -> dict:
     return {
         "project_title": "Decentralized IoT Botnet Detection",
@@ -391,6 +453,7 @@ def main() -> None:
     attack   = build_attack_section()
     graph    = build_graph_section()
     fed      = build_federated_section()
+    matrix   = build_matrix_section()
     overview = build_overview_section(prep, baseline, attack, fed)
 
     dashboard_data = {
@@ -401,14 +464,23 @@ def main() -> None:
         "attacks":      attack,
         "graph":        graph,
         "federated":    fed,
+        "matrix":       matrix,
     }
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with OUT_PATH.open("w", encoding="utf-8") as fh:
+    OUT_PATH_JSON.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Save as JSON
+    with OUT_PATH_JSON.open("w", encoding="utf-8") as fh:
         json.dump(dashboard_data, fh, indent=2)
+        
+    # Save as JS to avoid CORS issues when opening file:// directly
+    with OUT_PATH_JS.open("w", encoding="utf-8") as fh:
+        fh.write("window.DASHBOARD_DATA = ")
+        json.dump(dashboard_data, fh, indent=2)
+        fh.write(";\n")
 
-    size_kb = OUT_PATH.stat().st_size / 1024
-    print(f"[OK] Dashboard data written -> {OUT_PATH}")
+    size_kb = OUT_PATH_JSON.stat().st_size / 1024
+    print(f"[OK] Dashboard data written -> {OUT_PATH_JSON} and .js")
     print(f"  Size: {size_kb:.1f} KB")
 
 
