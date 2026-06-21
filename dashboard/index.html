@@ -1,55 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Decentralized IoT Botnet Detection Dashboard — CICIoT2023 dataset analysis, federated learning, and attack-specific ML models.">
+  <meta name="description"
+    content="Decentralized IoT Botnet Detection Dashboard — CICIoT2023 dataset analysis, federated learning, and attack-specific ML models.">
   <title>IoT Botnet Detection Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">🛡️</div>
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" fill="currentColor"
+            opacity="0.9" />
+        </svg>
+      </div>
       <div class="logo-title">IoT DETECT</div>
       <div class="logo-sub">Decentralized Botnet Analysis</div>
     </div>
-    
+
     <div class="nav-section-label">Main</div>
     <a href="#section-overview" class="nav-item active" data-target="overview" id="nav-overview">
-      <span class="nav-icon">📊</span> Overview
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+        </svg></span> Overview
     </a>
     <a href="#section-graph" class="nav-item" data-target="graph" id="nav-graph">
-      <span class="nav-icon">🌐</span> Network Graph
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="2" />
+          <circle cx="4" cy="6" r="2" />
+          <circle cx="20" cy="6" r="2" />
+          <circle cx="4" cy="18" r="2" />
+          <circle cx="20" cy="18" r="2" />
+          <path
+            d="M6 6h4M14 6h4M6 18h4M14 18h4M12 10v4M5.4 7.2l1.2 1.6M17.4 7.2l-1.2 1.6M5.4 16.8l1.2-1.6M17.4 16.8l-1.2-1.6"
+            stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        </svg></span> Network Graph
     </a>
     <a href="#section-attacks" class="nav-item" data-target="attacks" id="nav-attacks">
-      <span class="nav-icon">⚔️</span> Attack Models
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg></span> Attack Models
     </a>
-    
+
     <div class="nav-section-label">Pipeline</div>
     <a href="#section-preprocessing" class="nav-item" data-target="preprocessing" id="nav-preprocessing">
-      <span class="nav-icon">⚙️</span> Preprocessing
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 4v4l3 3-1.4 1.4L10 11V6h2z" />
+        </svg></span> Preprocessing
     </a>
     <a href="#section-baseline" class="nav-item" data-target="baseline" id="nav-baseline">
-      <span class="nav-icon">📈</span> Baseline Models
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M3 3v18h18M7 16l4-4 4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg></span> Baseline Models
     </a>
     <a href="#section-spectral" class="nav-item" data-target="spectral" id="nav-spectral">
-      <span class="nav-icon">📉</span> Spectral Analysis
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.5" fill="none"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg></span> Spectral Analysis
     </a>
     <a href="#section-pipeline" class="nav-item" data-target="pipeline" id="nav-pipeline">
-      <span class="nav-icon">🔗</span> Full Pipeline
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
+            stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        </svg></span> Full Pipeline
     </a>
     <a href="#section-reports" class="nav-item" data-target="reports" id="nav-reports">
-      <span class="nav-icon">📋</span> Reports & Export
+      <span class="nav-icon"><svg viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg></span> Reports & Export
     </a>
-    
+
     <div class="sidebar-footer">
       <div class="eyebrow">Status</div>
       <div style="display:flex;align-items:center;"><span class="live-dot"></span> System Live</div>
@@ -63,43 +103,40 @@
     <section id="section-overview" class="section visible">
       <div class="eyebrow">Project Overview</div>
       <h1 class="section-title" id="overview-title">Decentralized IoT Botnet Detection</h1>
-      <p class="section-subtitle">Real-time visualization and analytics dashboard for the CICIoT2023 dataset botnet detection pipeline.</p>
-      
+      <p class="section-subtitle">Real-time visualization and analytics dashboard for the CICIoT2023 dataset botnet
+        detection pipeline.</p>
+
       <div class="card glass">
         <div class="card-title">Pipeline Status</div>
         <div class="pipeline-flow" id="pipeline-flow-container">
           <!-- Populated by JS -->
         </div>
       </div>
-      
+
       <div class="hero-grid">
         <div class="hero-stats">
           <div class="stat-card accent-cyan">
-            <div class="stat-icon">📈</div>
             <div class="stat-label">Total Samples</div>
             <div class="stat-value" id="ov-samples">-</div>
             <div class="stat-sub">Across Train/Val/Test</div>
           </div>
           <div class="stat-card accent-orange">
-            <div class="stat-icon">🎯</div>
             <div class="stat-label">Attack Types</div>
             <div class="stat-value" id="ov-attacks">-</div>
             <div class="stat-sub">From 15 families</div>
           </div>
           <div class="stat-card accent-purple">
-            <div class="stat-icon">⚙️</div>
             <div class="stat-label">Models Trained</div>
             <div class="stat-value" id="ov-models">-</div>
             <div class="stat-sub">LR, RF, XGB, LGBM</div>
           </div>
           <div class="stat-card accent-red">
-            <div class="stat-icon">🏆</div>
             <div class="stat-label">Best Global F1</div>
             <div class="stat-value" id="ov-f1">-</div>
             <div class="stat-sub">Binary Baseline</div>
           </div>
         </div>
-        
+
         <div class="card">
           <div class="card-title">Targeted Threats</div>
           <div class="step-list" id="targeted-threats-list">
@@ -113,21 +150,33 @@
     <section id="section-graph" class="section">
       <div class="eyebrow">Topology</div>
       <h1 class="section-title">Live Network Graph</h1>
-      <p class="section-subtitle">Force-directed simulation of the IoT botnet topology. Click on malicious nodes to block them.</p>
-      
+      <p class="section-subtitle">Force-directed simulation of the IoT botnet topology. Click on malicious nodes to
+        block them.</p>
+
       <div class="grid-3" style="grid-template-columns: 2fr 1fr;">
         <!-- Left: Graph -->
         <div class="card" style="padding: 16px;">
           <div class="graph-controls">
-            <button class="btn btn-primary btn-sm" id="btn-sim-traffic"><span class="live-dot" style="margin-right:4px;"></span> Simulate Traffic</button>
+            <button class="btn btn-primary btn-sm" id="btn-sim-traffic"><span class="live-dot"
+                style="margin-right:4px;"></span> Simulate Traffic</button>
             <button class="btn btn-ghost btn-sm" id="btn-reset-graph">Reset Graph</button>
             <div style="flex:1;"></div>
             <div class="graph-legend">
-              <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div> Benign</div>
-              <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> DDoS-ICMP</div>
-              <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> DDoS-SYN</div>
-              <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Mirai-GRE</div>
-              <div class="legend-item"><div class="legend-dot" style="background:var(--grey)"></div> Blocked</div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--cyan)"></div> Benign
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--red)"></div> DDoS-ICMP
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent)"></div> DDoS-SYN
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--purple)"></div> Mirai-GRE
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--grey)"></div> Blocked
+              </div>
             </div>
           </div>
           <div id="graph-canvas-wrap">
@@ -135,38 +184,45 @@
             <div id="node-tooltip" class="node-tooltip"></div>
           </div>
         </div>
-        
+
         <!-- Right: Control Panel -->
         <div style="display:flex; flex-direction:column; gap:16px;">
           <div class="card glow-red">
             <div class="card-title">Node Control</div>
             <div class="metric-row" style="margin-bottom:12px;">
               <div class="metric-pill">Total: <strong id="gc-total">50</strong></div>
-              <div class="metric-pill">Malicious: <strong id="gc-malicious" style="color:var(--orange)">0%</strong></div>
+              <div class="metric-pill">Malicious: <strong id="gc-malicious" style="color:var(--orange)">0%</strong>
+              </div>
               <div class="metric-pill">Blocked: <strong id="gc-blocked" style="color:var(--red)">0</strong></div>
             </div>
-            <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Select a node in the graph to view its details and block its traffic.</p>
-            
-            <div id="selected-node-panel" style="display:none; background:var(--surface); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); margin-bottom:12px;">
-              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;" id="sn-type-label">Node Type</div>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Select a node in the graph to view its
+              details and block its traffic.</p>
+
+            <div id="selected-node-panel"
+              style="display:none; background:var(--surface); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); margin-bottom:12px;">
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;"
+                id="sn-type-label">Node Type</div>
               <div style="font-size:14px; font-weight:700; margin-bottom:8px;" id="sn-id">Node #0</div>
               <div class="metric-row">
                 <div class="metric-pill">Links: <strong id="sn-links">0</strong></div>
                 <div class="metric-pill">Vol: <strong id="sn-vol">0</strong></div>
               </div>
               <div style="margin-top:12px; display:flex; gap:8px;">
-                <button class="btn btn-danger btn-sm" id="btn-block-node" style="flex:1;">🚫 Block Node</button>
-                <button class="btn btn-ghost btn-sm" id="btn-unblock-node" style="flex:1; display:none;">🔓 Unblock</button>
+                <button class="btn btn-danger btn-sm" id="btn-block-node" style="flex:1;">Block Node</button>
+                <button class="btn btn-ghost btn-sm" id="btn-unblock-node"
+                  style="flex:1; display:none;">Unblock</button>
               </div>
             </div>
           </div>
-          
+
           <div class="card" style="flex:1; display:flex; flex-direction:column;">
             <div class="card-title">Blocked Log</div>
             <div class="blocked-log" id="blocked-log">
-              <div style="font-size:11px; color:var(--text-muted); text-align:center; padding:20px 0;">No nodes blocked yet.</div>
+              <div style="font-size:11px; color:var(--text-muted); text-align:center; padding:20px 0;">No nodes blocked
+                yet.</div>
             </div>
-            <button class="btn btn-ghost btn-sm" id="btn-export-blocked" style="margin-top:12px; width:100%;">📥 Export Blocked List</button>
+            <button class="btn btn-ghost btn-sm" id="btn-export-blocked" style="margin-top:12px; width:100%;">Export
+              Blocked List</button>
           </div>
         </div>
       </div>
@@ -176,14 +232,15 @@
     <section id="section-attacks" class="section">
       <div class="eyebrow">Threat Analysis</div>
       <h1 class="section-title">Attack-Specific Models</h1>
-      <p class="section-subtitle">Dedicated binary classifiers trained on attack-specific feature signatures using One-vs-Rest framing.</p>
-      
+      <p class="section-subtitle">Dedicated binary classifiers trained on attack-specific feature signatures using
+        One-vs-Rest framing.</p>
+
       <div class="tabs" id="attack-tabs">
         <button class="tab-btn active-ddos" data-attack="ddos_icmp">DDoS-ICMP</button>
         <button class="tab-btn" data-attack="ddos_syn">DDoS-SYN</button>
         <button class="tab-btn" data-attack="mirai_greeth">Mirai-GRE</button>
       </div>
-      
+
       <div class="card" id="attack-content-panel">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px;">
           <div>
@@ -195,21 +252,30 @@
             <div style="font-size:12px; color:var(--text-sub);" id="ac-train-info">500K rows (Class balanced)</div>
           </div>
         </div>
-        
+
         <div class="grid-2">
           <div>
             <div class="card-title">Key Signatures</div>
             <div class="feat-grid" id="ac-signatures"></div>
-            
+
             <div class="divider"></div>
-            
+
             <div class="card-title">Model Performance</div>
             <table class="data-table">
-              <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1 Score</th><th>ROC-AUC</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Accuracy</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1 Score</th>
+                  <th>ROC-AUC</th>
+                </tr>
+              </thead>
               <tbody id="ac-metrics-table"></tbody>
             </table>
           </div>
-          
+
           <div>
             <div class="chart-wrap tall">
               <div class="card-title">Confusion Matrix</div>
@@ -225,8 +291,9 @@
     <section id="section-preprocessing" class="section">
       <div class="eyebrow">Data Pipeline</div>
       <h1 class="section-title">Preprocessing & Selection</h1>
-      <p class="section-subtitle">Raw dataset cleaning and global feature selection via Pearson and Mutual Information intersection.</p>
-      
+      <p class="section-subtitle">Raw dataset cleaning and global feature selection via Pearson and Mutual Information
+        intersection.</p>
+
       <div class="grid-3">
         <div class="card" style="grid-column: span 2;">
           <div class="card-title">Feature Overlap (Pearson ∩ MI)</div>
@@ -234,7 +301,7 @@
             <canvas id="chart-features"></canvas>
           </div>
         </div>
-        
+
         <div class="card">
           <div class="card-title">Class Distribution</div>
           <div class="chart-wrap" style="height:250px;">
@@ -242,18 +309,19 @@
           </div>
         </div>
       </div>
-      
+
       <div class="divider"></div>
-      
+
       <div class="grid-2">
         <div class="card">
           <div class="card-title">Cleaning Pipeline</div>
           <div class="step-list" id="prep-pipeline-list"></div>
         </div>
-        
+
         <div class="card">
           <div class="card-title">Selected Features (17)</div>
-          <div id="selected-features-grid" class="feat-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px,1fr));"></div>
+          <div id="selected-features-grid" class="feat-grid"
+            style="grid-template-columns: repeat(auto-fill, minmax(160px,1fr));"></div>
         </div>
       </div>
     </section>
@@ -262,7 +330,8 @@
     <section id="section-baseline" class="section">
       <div class="eyebrow">Section 5 — Original 17 Features</div>
       <h1 class="section-title">Baseline Models</h1>
-      <p class="section-subtitle">Performance of LR, RF, XGB, and LGBM trained on the 17 globally-selected features for both binary and family-level classification.</p>
+      <p class="section-subtitle">Performance of LR, RF, XGB, and LGBM trained on the 17 globally-selected features for
+        both binary and family-level classification.</p>
 
       <div class="grid-4" id="baseline-stat-cards">
         <!-- Populated by JS -->
@@ -276,7 +345,15 @@
         <div class="card">
           <div class="card-title">Model Comparison</div>
           <table class="data-table">
-            <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+              </tr>
+            </thead>
             <tbody id="baseline-table"></tbody>
           </table>
         </div>
@@ -296,11 +373,20 @@
         <div class="card">
           <div class="card-title">Multi-Class Results</div>
           <table class="data-table">
-            <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+              </tr>
+            </thead>
             <tbody id="family-table"></tbody>
           </table>
           <p style="font-size:11px; color:var(--text-sub); margin-top:12px; line-height:1.6;">
-            Family-level classification across 15 attack families. Class imbalance (DDoS dominates at 72.8%) makes this significantly harder than binary detection.
+            Family-level classification across 15 attack families. Class imbalance (DDoS dominates at 72.8%) makes this
+            significantly harder than binary detection.
           </p>
         </div>
         <div class="card">
@@ -316,8 +402,9 @@
     <section id="section-spectral" class="section">
       <div class="eyebrow">Graph Algorithms</div>
       <h1 class="section-title">Spectral Analysis</h1>
-      <p class="section-subtitle">Graph partitioning and Laplacian eigenvalue extraction for network topology features.</p>
-      
+      <p class="section-subtitle">Graph partitioning and Laplacian eigenvalue extraction for network topology features.
+      </p>
+
       <div class="grid-4">
         <div class="stat-card">
           <div class="stat-label">Partitions</div>
@@ -340,7 +427,7 @@
           <div class="stat-sub">Algebraic connectivity</div>
         </div>
       </div>
-      
+
       <div class="grid-2" style="margin-top:24px;">
         <div class="card">
           <div class="card-title">Laplacian Eigenvalues</div>
@@ -355,28 +442,32 @@
               <div class="step-num">1</div>
               <div class="step-content">
                 <div class="step-title">Graph Construction</div>
-                <div class="step-detail">IP-to-IP flows are aggregated into a graph where edges represent communication volume.</div>
+                <div class="step-detail">IP-to-IP flows are aggregated into a graph where edges represent communication
+                  volume.</div>
               </div>
             </div>
             <div class="step-item">
               <div class="step-num">2</div>
               <div class="step-content">
                 <div class="step-title">Partitioning</div>
-                <div class="step-detail">The graph is split into manageable edge-clusters to localize spectral analysis.</div>
+                <div class="step-detail">The graph is split into manageable edge-clusters to localize spectral analysis.
+                </div>
               </div>
             </div>
             <div class="step-item">
               <div class="step-num">3</div>
               <div class="step-content">
                 <div class="step-title">Normalized Laplacian</div>
-                <div class="step-detail">L = I - D<sup>(-1/2)</sup> A D<sup>(-1/2)</sup>. Top eigenvalues capture traffic structure.</div>
+                <div class="step-detail">L = I - D<sup>(-1/2)</sup> A D<sup>(-1/2)</sup>. Top eigenvalues capture
+                  traffic structure.</div>
               </div>
             </div>
             <div class="step-item">
               <div class="step-num">4</div>
               <div class="step-content">
                 <div class="step-title">Spectral RF</div>
-                <div class="step-detail">17 original features + 18 spectral columns (8 eigenvalues + 8 projections + Fiedler + partition_id) fed to RF.</div>
+                <div class="step-detail">17 original features + 18 spectral columns (8 eigenvalues + 8 projections +
+                  Fiedler + partition_id) fed to RF.</div>
               </div>
             </div>
           </div>
@@ -391,7 +482,15 @@
         <div class="card">
           <div class="card-title">Performance Overlay (17 + Spectral Features)</div>
           <table class="data-table">
-            <thead><tr><th>Model</th><th>Features</th><th>Accuracy</th><th>F1</th><th>Δ F1</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Features</th>
+                <th>Accuracy</th>
+                <th>F1</th>
+                <th>Δ F1</th>
+              </tr>
+            </thead>
             <tbody id="spectral-compare-table"></tbody>
           </table>
         </div>
@@ -408,7 +507,8 @@
     <section id="section-pipeline" class="section">
       <div class="eyebrow">Section 7 — End-to-End</div>
       <h1 class="section-title">Fully Integrated Pipeline</h1>
-      <p class="section-subtitle">Performance of models utilizing Original 17 Features + Graph/Spectral + Matrix Projection features, plus Federated Learning results across rounds.</p>
+      <p class="section-subtitle">Performance of models utilizing Original 17 Features + Graph/Spectral + Matrix
+        Projection features, plus Federated Learning results across rounds.</p>
 
       <!-- Matrix Integration -->
       <div class="eyebrow" style="margin-bottom:8px;">Matrix Integration — Feature Engineering</div>
@@ -420,7 +520,14 @@
         <div class="card">
           <div class="card-title">Model Performance — All Feature Sets</div>
           <table class="data-table">
-            <thead><tr><th>Model Variant</th><th>Features</th><th>Accuracy</th><th>F1</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Model Variant</th>
+                <th>Features</th>
+                <th>Accuracy</th>
+                <th>F1</th>
+              </tr>
+            </thead>
             <tbody id="matrix-compare-table"></tbody>
           </table>
         </div>
@@ -443,7 +550,7 @@
             <canvas id="chart-fl"></canvas>
           </div>
         </div>
-        
+
         <div class="card">
           <div class="card-title">Architecture</div>
           <div class="fl-diagram">
@@ -473,7 +580,7 @@
               <div class="fl-sub">Local RF Update</div>
             </div>
           </div>
-          
+
           <div class="metric-row" style="justify-content:center; margin-top:20px;">
             <div class="metric-pill">Framework: <strong id="fl-fw">Flower</strong></div>
             <div class="metric-pill">Clients: <strong id="fl-clients">2</strong></div>
@@ -495,17 +602,18 @@
     <section id="section-reports" class="section">
       <div class="eyebrow">Section 8 — Outputs</div>
       <h1 class="section-title">Reports & Export</h1>
-      <p class="section-subtitle">Download metrics, confusion matrices, and model checkpoint information. View the preprocessing run log.</p>
+      <p class="section-subtitle">Download metrics, confusion matrices, and model checkpoint information. View the
+        preprocessing run log.</p>
 
       <!-- Download buttons -->
       <div class="card" style="margin-bottom:24px;">
         <div class="card-title">Export Metrics</div>
         <div class="metric-row" style="flex-wrap:wrap; gap:10px; margin-top:0;">
-          <button class="btn btn-success btn-sm" id="btn-export-dashboard-json">📥 Dashboard Data JSON</button>
-          <button class="btn btn-success btn-sm" id="btn-export-attack-metrics">📥 Attack Metrics JSON</button>
-          <button class="btn btn-success btn-sm" id="btn-export-binary-csv">📥 Binary Results CSV</button>
-          <button class="btn btn-success btn-sm" id="btn-export-family-csv">📥 Family Results CSV</button>
-          <button class="btn btn-success btn-sm" id="btn-export-comparison-md">📥 Comparison Report MD</button>
+          <button class="btn btn-success btn-sm" id="btn-export-dashboard-json"> Dashboard Data JSON</button>
+          <button class="btn btn-success btn-sm" id="btn-export-attack-metrics"> Attack Metrics JSON</button>
+          <button class="btn btn-success btn-sm" id="btn-export-binary-csv"> Binary Results CSV</button>
+          <button class="btn btn-success btn-sm" id="btn-export-family-csv"> Family Results CSV</button>
+          <button class="btn btn-success btn-sm" id="btn-export-comparison-md"> Comparison Report MD</button>
         </div>
       </div>
 
@@ -518,7 +626,8 @@
 
         <div class="card">
           <div class="card-title">Cross-Attack False Alarm Matrix</div>
-          <p style="font-size:12px; color:var(--text-sub); margin-bottom:14px;">Each attack-specific model tested against all three attack subsets. Values show recall on that attack's validation rows.</p>
+          <p style="font-size:12px; color:var(--text-sub); margin-bottom:14px;">Each attack-specific model tested
+            against all three attack subsets. Values show recall on that attack's validation rows.</p>
           <table class="data-table" id="cross-attack-table">
             <thead>
               <tr>
@@ -556,4 +665,5 @@
   <script src="js/node-control.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>
